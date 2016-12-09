@@ -1,0 +1,1 @@
+module.exports.SingleSheet = require('./out/app/obj_xlsx').SingleSheet
