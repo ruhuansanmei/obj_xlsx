@@ -1,6 +1,6 @@
 {
   "name": "objxlsx",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "xlsx and maybe csv",
   "main": "index.js",
   "scripts": {
