@@ -19,10 +19,9 @@ var SingleSheet = (function () {
             var _loop_1 = function(d) {
                 var tmp = lodash_1.cloneDeep(source_template);
                 titles.map(function (x, n) {
-                    if (d[n] == undefined) {
-                        tmp[x] == null;
+                    if (d[n] != undefined) {
+                        tmp[x] = d[n];
                     }
-                    tmp[x] = d[n];
                 });
                 source.push(tmp);
             };
@@ -43,19 +42,20 @@ var SingleSheet = (function () {
             var data_list = lodash_1.cloneDeep(data);
             var result_titles = [];
             for (var j in data_list[0]) {
-                result_titles.push(j);
+                result_titles.push(j == 'undefined' ? null : j);
             }
             var result_list = [];
             result_list.push(result_titles);
-            var template = Array(result_titles.length);
-            // for (let t of )
+            var template = [];
+            for (var iter = 0; iter < result_titles.length; ++iter) {
+                template.push[null];
+            }
             var _loop_2 = function(m) {
                 var tmp = lodash_1.cloneDeep(template);
                 result_titles.map(function (x, n) {
-                    if (m[x] == undefined) {
-                        tmp[n] = null;
+                    if (m[x] != undefined) {
+                        tmp[n] = m[x];
                     }
-                    tmp[n] = m[x];
                 });
                 result_list.push(tmp);
             };

@@ -14,10 +14,9 @@ class SingleSheet {
       for (let d of doc) {
         let tmp = cloneDeep(source_template)
         titles.map((x, n) => {
-          if (d[n] == undefined) {
-            tmp[x] == null
+          if (d[n] != undefined) {
+            tmp[x] = d[n]
           }
-          tmp[x] = d[n]
         })
         source.push(tmp)
       }
@@ -32,19 +31,20 @@ class SingleSheet {
       const data_list = cloneDeep(data)
       const result_titles = []
       for (let j in data_list[0]) {
-        result_titles.push(j)
+        result_titles.push(j == 'undefined' ? null : j)
       }
       const result_list = []
       result_list.push(result_titles)
-      const template = Array(result_titles.length)
-      // for (let t of )
+      const template = []
+      for (let iter = 0; iter < result_titles.length; ++iter) {
+        template.push[null]
+      }
       for (let m of data_list) {
         let tmp = cloneDeep(template)
         result_titles.map((x, n) => {
-          if (m[x] == undefined) {
-            tmp[n] = null
+          if (m[x] != undefined) {
+            tmp[n] = m[x]
           }
-          tmp[n] = m[x]
         })
         result_list.push(tmp)
       }
@@ -58,4 +58,4 @@ class SingleSheet {
   }
 }
 
-export {SingleSheet}
+export { SingleSheet }
