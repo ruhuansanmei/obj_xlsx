@@ -1,7 +1,8 @@
 "use strict";
-var fs = require('fs');
-var xlsx = require('node-xlsx');
-var lodash_1 = require('lodash');
+var fs = require("fs");
+var xlsx = require("node-xlsx");
+var lodash_1 = require("lodash");
+var iconv = require("iconv-lite");
 var SingleSheet = (function () {
     function SingleSheet() {
     }
@@ -16,7 +17,7 @@ var SingleSheet = (function () {
                 var t = titles_1[_i];
                 source_template[t] = null;
             }
-            var _loop_1 = function(d) {
+            var _loop_1 = function (d) {
                 var tmp = lodash_1.cloneDeep(source_template);
                 titles.map(function (x, n) {
                     if (d[n] != undefined) {
@@ -50,7 +51,7 @@ var SingleSheet = (function () {
             for (var iter = 0; iter < result_titles.length; ++iter) {
                 template.push[null];
             }
-            var _loop_2 = function(m) {
+            var _loop_2 = function (m) {
                 var tmp = lodash_1.cloneDeep(template);
                 result_titles.map(function (x, n) {
                     if (m[x] != undefined) {
@@ -75,4 +76,79 @@ var SingleSheet = (function () {
     return SingleSheet;
 }());
 exports.SingleSheet = SingleSheet;
+var toCSV = function (path, x, wd) {
+    if (fs.existsSync(path)) {
+        fs.unlinkSync(path);
+    }
+    x = lodash_1.cloneDeep(x);
+    var head = [];
+    var headString;
+    x = x.length ? x : [{}];
+    for (var k in x[0]) {
+        head.push(k);
+    }
+    headString = head.join(',');
+    headString += '\r\n';
+    if (wd) {
+        var gData = iconv.encode(headString, wd);
+        fs.appendFileSync(path, gData);
+    }
+    else {
+        fs.appendFileSync(path, headString);
+    }
+    var writeContent = function (x) {
+        var i = x.shift();
+        if (!i) {
+            return 0;
+        }
+        var data = [];
+        var dataString;
+        for (var l in i) {
+            if (i[l] instanceof Array) {
+                var tData = i[l].join('#');
+                data.push(tData);
+            }
+            else {
+                data.push(i[l]);
+            }
+        }
+        dataString = data.join(',');
+        if (x.length != 0) {
+            dataString += '\r\n';
+        }
+        if (wd) {
+            var gData = iconv.encode(dataString, 'gbk');
+            fs.appendFileSync(path, gData);
+        }
+        else {
+            fs.appendFileSync(path, dataString);
+        }
+        return writeContent(x);
+    };
+    return writeContent(x);
+};
+exports.toCSV = toCSV;
+var toJSON = function (path, wd) {
+    var data;
+    if (wd) {
+        var binData = fs.readFileSync(path);
+        data = iconv.decode(binData, wd);
+    }
+    else {
+        data = fs.readFileSync(path, 'utf-8');
+    }
+    var dataArray = data.split('\r\n');
+    var head = dataArray.shift();
+    var headArray = head.split(',');
+    var result = dataArray.map(function (x) {
+        var obj = {};
+        var xArray = x.split(',');
+        headArray.map(function (a, i) {
+            obj[a] = xArray[i];
+        });
+        return obj;
+    });
+    return result;
+};
+exports.toJSON = toJSON;
 //# sourceMappingURL=obj_xlsx.js.map
