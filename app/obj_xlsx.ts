@@ -57,11 +57,40 @@ class SingleSheet {
       return false
     }
   }
+  static to_xlsx_buffer = (data: Object[], sheetName: string = 'result') => {
+    try {
+      const data_list = cloneDeep(data)
+      const result_titles = []
+      for (let j in data_list[0]) {
+        result_titles.push(j == 'undefined' ? null : j)
+      }
+      const result_list = []
+      result_list.push(result_titles)
+      const template = []
+      for (let iter = 0; iter < result_titles.length; ++iter) {
+        template.push[null]
+      }
+      for (let m of data_list) {
+        let tmp = cloneDeep(template)
+        result_titles.map((x, n) => {
+          if (m[x] != undefined) {
+            tmp[n] = m[x]
+          }
+        })
+        result_list.push(tmp)
+      }
+      let buffer = xlsx.build([{ name: sheetName, data: result_list }])
+      return buffer
+    } catch (e) {
+      console.log(e)
+      return false
+    }
+  }
 }
 
 
 let toCSV = (path: string, x: Object[], wd?: string) => {
-  if(fs.existsSync(path)) {
+  if (fs.existsSync(path)) {
     fs.unlinkSync(path)
   }
   x = cloneDeep(x)

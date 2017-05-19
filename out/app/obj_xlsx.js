@@ -75,6 +75,41 @@ var SingleSheet = (function () {
     };
     return SingleSheet;
 }());
+SingleSheet.to_xlsx_buffer = function (data, sheetName) {
+    if (sheetName === void 0) { sheetName = 'result'; }
+    try {
+        var data_list = lodash_1.cloneDeep(data);
+        var result_titles = [];
+        for (var j in data_list[0]) {
+            result_titles.push(j == 'undefined' ? null : j);
+        }
+        var result_list = [];
+        result_list.push(result_titles);
+        var template = [];
+        for (var iter = 0; iter < result_titles.length; ++iter) {
+            template.push[null];
+        }
+        var _loop_3 = function (m) {
+            var tmp = lodash_1.cloneDeep(template);
+            result_titles.map(function (x, n) {
+                if (m[x] != undefined) {
+                    tmp[n] = m[x];
+                }
+            });
+            result_list.push(tmp);
+        };
+        for (var _i = 0, data_list_2 = data_list; _i < data_list_2.length; _i++) {
+            var m = data_list_2[_i];
+            _loop_3(m);
+        }
+        var buffer = xlsx.build([{ name: sheetName, data: result_list }]);
+        return buffer;
+    }
+    catch (e) {
+        console.log(e);
+        return false;
+    }
+};
 exports.SingleSheet = SingleSheet;
 var toCSV = function (path, x, wd) {
     if (fs.existsSync(path)) {
